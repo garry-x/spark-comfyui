@@ -1,0 +1,26 @@
+services:
+  comfyui:
+    build:
+      context: /data/ComfyUI/ComfyUI
+      dockerfile: Dockerfile
+    image: comfyui:local
+    container_name: comfyui
+    runtime: nvidia
+    ports:
+      - "8188:8188"
+    volumes:
+      - /data/ComfyUI/ComfyUI/models:/app/models
+      - /data/ComfyUI/ComfyUI/output:/app/output
+      - /data/ComfyUI/ComfyUI/input:/app/input
+      - /data/ComfyUI/ComfyUI/user:/app/user
+      - /data/ComfyUI/ComfyUI/logs:/app/logs
+      - /etc/localtime:/etc/localtime:ro
+      # 如需实时调试 custom_nodes 代码，取消下面注释
+      # - /data/ComfyUI/ComfyUI/custom_nodes:/app/custom_nodes
+    environment:
+      - NVIDIA_VISIBLE_DEVICES=all
+      - CUDA_VISIBLE_DEVICES=0
+      - PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True,max_split_size_mb:512
+    restart: unless-stopped
+    stdin_open: true
+    tty: true

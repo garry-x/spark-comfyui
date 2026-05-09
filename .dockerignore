@@ -1,0 +1,23 @@
+# 数据目录运行时挂载，不进镜像
+models/
+output/
+input/
+temp/
+logs/
+user/
+
+# 大模型文件
+*.safetensors
+*.ckpt
+*.pth
+*.bin
+*.onnx
+*.pt
+*.gguf
+
+# 其他
+__pycache__/
+.git/
+.gitignore
+*.log
+!wheels/
