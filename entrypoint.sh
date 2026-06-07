@@ -12,7 +12,7 @@ DEFAULT_ARGS=(
     "--port" "8188"
     "--enable-cors-header" "*"
     "--preview-method" "auto"
-    "--normalvram"
+    "--highvram"
     "--fp8_e4m3fn-unet"
     "--fp8_e4m3fn-text-enc"
     "--reserve-vram" "1.5"

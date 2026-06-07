@@ -1,4 +1,4 @@
-FROM nvidia/cuda:12.8.0-devel-ubuntu24.04
+FROM nvidia/cuda:13.1.1-devel-ubuntu24.04
 
 ENV DEBIAN_FRONTEND=noninteractive \
     PYTHONUNBUFFERED=1 \
@@ -33,8 +33,8 @@ RUN pip install --no-cache-dir \
 # ========== 阶段 2：业务代码 & custom_nodes 依赖 ==========
 COPY . .
 
-RUN find /app/custom_nodes -name "requirements.txt" -print0 2>/dev/null | \
-    while IFS= read -r -d '' req; do \
+RUN find /app/custom_nodes -name "requirements.txt" -print 2>/dev/null | \
+    while IFS= read -r req; do \
         echo "Installing: $req"; \
         pip install --no-cache-dir --find-links ${WHEELS_DIR} -r "$req"; \
     done || true
