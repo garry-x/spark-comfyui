@@ -1,0 +1,38 @@
+--- __init__.py
++++ __init__.py
+@@ -41,6 +41,17 @@ if str(current_dir) not in sys.path:
+ 
+ try:
+     from sol_attn_node import NODE_CLASS_MAPPINGS, NODE_DISPLAY_NAME_MAPPINGS
++    try:
++        from h3_fbc_node import NODE_CLASS_MAPPINGS as _FBC_N, NODE_DISPLAY_NAME_MAPPINGS as _FBC_D
++        NODE_CLASS_MAPPINGS.update(_FBC_N)
++        NODE_DISPLAY_NAME_MAPPINGS.update(_FBC_D)
++    except Exception as _fe:
++        logger.warning(f"H3 FirstBlockCache node not loaded: {_fe}")
++    try:
++        from h3_vae_batch import install as _vae_batch_install
++        _vae_batch_install()
++    except Exception as _ve:
++        logger.warning(f"H3 batched VAE decode not installed: {_ve}")
+     logger.info(f"✓ Sol-Attn nodes loaded: {list(NODE_CLASS_MAPPINGS.keys())}")
+ 
+     # 打印 GPU 信息（不触发 kernel 编译，只做能力探测）
+@@ -50,12 +61,14 @@ try:
+             cap = torch.cuda.get_device_capability(0)
+             name = torch.cuda.get_device_name(0)
+             sm = cap[0] * 10 + cap[1]
+-            if sm == 120:
++            if sm in (120, 121):
+                 logger.info(f"✓ GPU: {name} (SM{sm}) — Sol-Attn via flex_attention (Python) path")
+                 # 预热 flex_attention 编译内核，避免首次生成时 30-60s 编译延迟
++                # (SM121 uses triton_ref instead — flex is numerically wrong there)
+                 try:
+-                    from sol_attn_flex import warmup
+-                    warmup()
++                    if sm == 120:
++                        from sol_attn_flex import warmup
++                        warmup()
+                 except Exception as _we:
+                     logger.warning(f"flex_attention warmup skipped: {_we}")
+             elif sm in (90, 100):

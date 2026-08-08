@@ -1,0 +1,11 @@
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.so
+.venv/
+.vscode/
+.idea/
+.DS_Store
+*.log
+benchmarks/output/

@@ -6,28 +6,27 @@ mkdir -p "$LOG_DIR"
 
 LOG_FILE="$LOG_DIR/comfyui_$(date +%Y%m%d_%H%M%S).log"
 
-# 默认参数（与你本地命令完全一致）
+# H3-optimized defaults:
+#   --use-sage-attention  采样 ~25x 加速 (替代旧的 fp8 + pytorch-cross-attention)
+#   --highvram            模型常驻 GPU
+#   --reserve-vram 8      预留 VRAM 防止大分辨率时卸载模型（131GB 卡）
 DEFAULT_ARGS=(
     "--listen" "0.0.0.0"
     "--port" "8188"
     "--enable-cors-header" "*"
     "--preview-method" "auto"
+    "--use-sage-attention"
     "--highvram"
-    "--fp8_e4m3fn-unet"
-    "--fp8_e4m3fn-text-enc"
-    "--reserve-vram" "1.5"
-    "--dont-upcast-attention"
-    "--use-pytorch-cross-attention"
+    "--reserve-vram" "8"
 )
 
-# 如果外部没有传参，使用默认参数；否则用外部传入的
 if [ $# -eq 0 ]; then
     set -- "${DEFAULT_ARGS[@]}"
 fi
 
-echo "=== ComfyUI Starting | $(date) ===" | tee -a "$LOG_FILE"
-echo "Args: $@" | tee -a "$LOG_FILE"
-echo "Log file: $LOG_FILE" | tee -a "$LOG_FILE"
+echo "=== ComfyUI H3 | $(date) ===" | tee -a "$LOG_FILE"
+echo "Args: $*" | tee -a "$LOG_FILE"
+echo "Log: $LOG_FILE" | tee -a "$LOG_FILE"
 
 exec > >(tee -a "$LOG_FILE")
 exec 2>&1

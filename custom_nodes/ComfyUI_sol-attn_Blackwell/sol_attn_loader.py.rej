@@ -1,0 +1,19 @@
+--- sol_attn_loader.py
++++ sol_attn_loader.py
+@@ -47,7 +47,7 @@ class SolAttnLoader:
+             "sm": sm,
+             "capability": capability,
+             "arch_name": self._get_arch_name(sm),
+-            "supported": sm in [90, 100, 120]  # H100, B200, RTX 5090
++            "supported": sm in [90, 100, 120, 121]  # H100, B200, RTX 5090, GB10
+         }
+ 
+     def _get_arch_name(self, sm: int) -> str:
+@@ -56,6 +56,7 @@ class SolAttnLoader:
+             90: "Hopper (H100)",
+             100: "Blackwell Datacenter (B200)",
+             120: "Blackwell Consumer (RTX 5090)",
++            121: "Blackwell Unified (GB10 / DGX Spark)",
+         }
+         return arch_map.get(sm, f"SM{sm}")
+ 

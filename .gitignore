@@ -1,4 +1,3 @@
-wheels/
 __pycache__/
 *.py[cod]
 /output/
@@ -6,8 +5,13 @@ __pycache__/
 !/input/example.png
 /models/
 /temp/
-/custom_nodes/
-!custom_nodes/example_node.py.example
+/custom_nodes/*
+!/custom_nodes/example_node.py.example
+!/custom_nodes/ComfyUI-MiniMaxH3-TeaCache/
+!/custom_nodes/ComfyUI_sol-attn_Blackwell/
+!/custom_nodes/ComfyUI-SolAttn_triton/
+!/custom_nodes/ComfyUI-MiniMaxH3-FirstBlockCache/
+!/custom_nodes/ComfyUI-api-tools/
 extra_model_paths.yaml
 /.vs
 .vscode/
@@ -25,3 +29,5 @@ web_custom_versions/
 filtered-openapi.yaml
 uv.lock
 .comfy_environment
+wheels/
+keys-SM121-Optimized-MiniMax-H3-Nvidia-Sol-Engine-Kijai-SolAttn_Triton-Single-DGX-Spark/

@@ -1,0 +1,14 @@
+This directory is a redistribution of ComfyUI_sol-attn_Blackwell by KingGore
+(https://github.com/KingGore/ComfyUI_sol-attn_Blackwell), licensed Apache-2.0.
+
+Modifications made by this repository (Apache-2.0 Section 4b notice):
+  __init__.py         accept compute capability 12.1 (GB10) alongside 12.0;
+                      skip the flex_attention warmup on sm_121;
+                      register the FirstBlockCache node and batched VAE patch.
+  sol_attn/interface.py   route sm_121 to the Triton kernel path (2 sites).
+  sol_attn_loader.py      report sm_121 as supported; name it GB10 / DGX Spark.
+  minimax_h3_patch.py     force the Triton backend on sm_121 -- torch
+                      flex_attention is numerically WRONG on this arch
+                      (cosine similarity ~0.92 vs SDPA, silently, no error).
+
+The unmodified upstream is recoverable by reverting patches/sm121-solattn-blackwell.patch.

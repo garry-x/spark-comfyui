@@ -1,0 +1,20 @@
+--- sol_attn/interface.py
++++ sol_attn/interface.py
+@@ -58,7 +58,7 @@ def _validate(
+     arch = torch.cuda.get_device_capability(q.device)
+     # SM120 is handled separately via the Triton path; remap so the shared
+     # validation logic below still accepts it.
+-    if arch == (12, 0):
++    if arch in ((12, 0), (12, 1)):
+         arch = (9, 0)
+     if arch not in ((9, 0), (10, 0)):
+         raise RuntimeError(
+@@ -138,7 +138,7 @@ def sol_attn(
+     # Do this BEFORE _validate so we never touch the cuda.bindings path.
+     # ------------------------------------------------------------------
+     raw_arch = torch.cuda.get_device_capability(q.device)
+-    if raw_arch == (12, 0):
++    if raw_arch in ((12, 0), (12, 1)):
+         from .triton_ref.fwd import sol_attn as _triton_sol_attn
+         # triton_ref supports kv_splits=1; for kv_splits>1 we silently
+         # fall back to 1 — the correctness is unaffected, only potential

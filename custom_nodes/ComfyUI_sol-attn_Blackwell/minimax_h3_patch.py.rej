@@ -1,0 +1,22 @@
+--- minimax_h3_patch.py
++++ minimax_h3_patch.py
+@@ -48,9 +48,16 @@ def _load_sol_attn():
+         # 失败时回退到 triton_ref，再回退到 SDPA。
+         from sol_attn_flex import sol_attn_flex as _flex
+         from sol_attn.interface import sol_attn as _triton
+-        _sol_attn_fn = _flex
+-        _sol_attn_fallback_fn = _triton
+-        logger.info("[MiniMaxH3-SolAttn] sol_attn_flex 加载成功")
++        # GB10 (SM121): flex_attention produces numerically wrong output
++        # (cos≈0.92 vs SDPA); triton_ref is exact (cos≈0.99998) — use it as primary.
++        if torch.cuda.get_device_capability(0) == (12, 1):
++            _sol_attn_fn = _triton
++            _sol_attn_fallback_fn = None
++            logger.info("[MiniMaxH3-SolAttn] SM121: triton_ref 加载成功 (flex 禁用)")
++        else:
++            _sol_attn_fn = _flex
++            _sol_attn_fallback_fn = _triton
++            logger.info("[MiniMaxH3-SolAttn] sol_attn_flex 加载成功")
+     except Exception as e:
+         try:
+             from sol_attn.interface import sol_attn

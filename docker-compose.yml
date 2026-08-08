@@ -15,12 +15,15 @@ services:
       - /data/ComfyUI/ComfyUI/user:/app/user
       - /data/ComfyUI/ComfyUI/logs:/app/logs
       - /etc/localtime:/etc/localtime:ro
+      # Triton kernel cache (persistent, avoids recompile on restart)
+      - /tmp/triton_cache:/tmp/triton_cache
       # 如需实时调试 custom_nodes 代码，取消下面注释
       # - /data/ComfyUI/ComfyUI/custom_nodes:/app/custom_nodes
     environment:
       - NVIDIA_VISIBLE_DEVICES=all
       - CUDA_VISIBLE_DEVICES=0
       - PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True,max_split_size_mb:512
+      - TRITON_CACHE_DIR=/tmp/triton_cache
     restart: unless-stopped
     stdin_open: true
     tty: true
